@@ -1,0 +1,128 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>KAUSAR | Coffee & Bakery</title>
+
+    <link rel="stylesheet"
+          href="{% static 'menu/css/style.css' %}">
+</head>
+
+<body>
+
+<header class="hero">
+    <div class="hero-content">
+        <div class="brand-symbol">✦</div>
+
+        <h1>KAUSAR</h1>
+
+        <p class="brand-subtitle">
+            COFFEE & BAKERY
+        </p>
+
+        <p class="hero-message">
+            Вкус, в который хочется вернуться
+        </p>
+    </div>
+</header>
+
+<nav class="category-nav" aria-label="Категории меню">
+    <div class="category-links">
+
+        <a
+            href="{% url 'menu_list' %}"
+            class="category-link {% if not active_category %}active{% endif %}"
+        >
+            Все
+        </a>
+
+        {% for category in all_categories %}
+        <a
+            href="?category={{ category.id }}"
+            class="category-link {% if active_category == category.id|stringformat:'s' %}active{% endif %}"
+        >
+            {{ category.name }}
+        </a>
+        {% endfor %}
+
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="section-heading">
+        <p class="eyebrow">ПРИГОТОВЛЕНО С ЛЮБОВЬЮ</p>
+        <h2>Наше меню</h2>
+        <p>Выберите любимый вкус</p>
+    </div>
+
+    {% for category in categories %}
+
+    <section class="category-section">
+
+        <h3 class="category-title">
+            {{ category.name }}
+        </h3>
+
+        <div class="product-grid">
+            {% for product in category.available_products %}
+
+            <article class="product-card">
+
+                {% if product.image %}
+                <img
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                    class="product-image"
+                    loading="lazy"
+                >
+                {% else %}
+                <div class="image-placeholder">
+                    ☕
+                </div>
+                {% endif %}
+
+                <div class="product-info">
+                    <h4>{{ product.name }}</h4>
+
+                    {% if product.description %}
+                    <p class="description">
+                        {{ product.description }}
+                    </p>
+                    {% endif %}
+
+                    <p class="price">
+                        {{ product.price|floatformat:0 }} сом
+                    </p>
+                </div>
+            </article>
+
+            {% endfor %}
+        </div>
+
+    </section>
+
+    {% empty %}
+
+    <div class="empty-menu">
+        <h3>Меню обновляется</h3>
+        <p>Скоро здесь появятся наши предложения.</p>
+    </div>
+
+    {% endfor %}
+
+</main>
+
+<footer>
+    <h3>KAUSAR</h3>
+    <p>Coffee & Bakery</p>
+    <small>Сделано с любовью ☕</small>
+</footer>
+
+</body>
+</html>
